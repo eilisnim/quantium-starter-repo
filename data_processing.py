@@ -57,24 +57,27 @@ df_pinkmorsel['sales'] = df_pinkmorsel['quantity'] * df_pinkmorsel['price']
 print(df_pinkmorsel.head())
 print(df_pinkmorsel.tail())
 
-sales_pre_increase = df_pinkmorsel[df_pinkmorsel['date'] < '2021-01-15']['sales'].sum()
-sales_post_increase = df_pinkmorsel[df_pinkmorsel['date'] >= '2021-01-15']['sales'].sum()
+# sales_pre_increase = df_pinkmorsel[df_pinkmorsel['date'] < '2021-01-15']['sales'].sum()
+# sales_post_increase = df_pinkmorsel[df_pinkmorsel['date'] >= '2021-01-15']['sales'].sum()
 
 # clean df for dash
-# df_dash = df_pinkmorsel.drop(columns=['product', 'price', 'quantity'])
 df_dash = df_pinkmorsel.drop(columns=['product', 'price', 'quantity'])
-df_dash = df_dash[df_dash['region'] == 'north']
-
-print(df_dash)
-
-print("Sales before increase ", sales_pre_increase)
-print("Sales after increase ", sales_post_increase)
+# filter
+# df containing: [sales], [date], [region]
+df_output = df_dash[['sales', 'date', 'region']].copy()
+# print("df_output: ", df_output)
+# ###
+# df_feb = df_output[df_output['date'].dt.month == 2].copy()
+df_feb1 = df_output[(df_output['date'].dt.month == 2) & (df_output['date'].dt.day == 1)].copy()
+# ###
 
 app = Dash(__name__)
 
 fig = px.line(
 #     df_region_sales,
-    df_dash,
+#    df_dash,
+#    df_output,
+    df_feb1,
     x='date',
     y='sales',
     color='region',   # This creates 4 separate lines
@@ -87,7 +90,5 @@ app.layout = html.Div([
     dcc.Graph(figure=fig)
 ])
 
-# if __name__ == "__main__":
-#     app.run(debug=True)
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
