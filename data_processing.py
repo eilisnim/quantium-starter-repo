@@ -57,8 +57,11 @@ df_pinkmorsel['sales'] = df_pinkmorsel['quantity'] * df_pinkmorsel['price']
 print(df_pinkmorsel.head())
 print(df_pinkmorsel.tail())
 
-# sales_pre_increase = df_pinkmorsel[df_pinkmorsel['date'] < '2021-01-15']['sales'].sum()
-# sales_post_increase = df_pinkmorsel[df_pinkmorsel['date'] >= '2021-01-15']['sales'].sum()
+sales_pre_increase = df_pinkmorsel[df_pinkmorsel['date'] < '2021-01-15']['sales'].sum()
+sales_post_increase = df_pinkmorsel[df_pinkmorsel['date'] >= '2021-01-15']['sales'].sum()
+
+print("sales_pre_increase: ", sales_pre_increase)
+print("sales_post_increase: ", sales_post_increase)
 
 # clean df for dash
 df_dash = df_pinkmorsel.drop(columns=['product', 'price', 'quantity'])
@@ -74,20 +77,23 @@ df_feb1 = df_output[(df_output['date'].dt.month == 2) & (df_output['date'].dt.da
 app = Dash(__name__)
 
 fig = px.line(
-#     df_region_sales,
-#    df_dash,
-#    df_output,
     df_feb1,
     x='date',
     y='sales',
     color='region',   # This creates 4 separate lines
     markers=True,
-    title='Pink Morsel Sales by Region'
 )
 
 app.layout = html.Div([
-    html.H1("Sales by Region"),
-    dcc.Graph(figure=fig)
+    html.H1(
+        "Pink Morsels Sales Dashboard",
+        style={'textAlign': 'center'}
+    ),
+
+    dcc.Graph(
+        id='sales-graph',
+        figure=fig
+    )
 ])
 
 if __name__ == "__main__":
