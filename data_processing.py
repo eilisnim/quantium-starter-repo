@@ -10,24 +10,8 @@ df1 = pd.read_csv('data/daily_sales_data_0.csv')
 df2 = pd.read_csv('data/daily_sales_data_1.csv')
 df3 = pd.read_csv('data/daily_sales_data_2.csv')
 
-# print headers and footers for each dataframe
-# print(df1.head())
-# print(df1.tail())
-# print(df2.head())
-# print(df2.tail())
-# print(df3.head())
-# print(df3.tail())
-
-# check column names are same in each excel file
-# print(df1.columns)
-# print(df2.columns)
-# print(df3.columns)
-
 # combine into 1 dataframe
 df_candy = pd.concat([df1, df2, df3], ignore_index=True)
-
-# print(df_candy.head())
-# print(df_candy.tail())
 
 # convert date to datetime
 df_candy['date'] = pd.to_datetime(df_candy['date'])
@@ -42,20 +26,17 @@ df_pinkmorsel = (
 # print(df_pinkmorsel['price'].unique())
 
 # is  'price' & 'quantity' numeric? for adding to give 'sales'
-quantityType = df_pinkmorsel['quantity'].dtype
 # clean 'price', remove dollar sign, convert type to float
 df_pinkmorsel['price'] = (
     df_pinkmorsel['price']
     .str.replace('$', '', regex=False)
     .astype(float)
 )
+quantityType = df_pinkmorsel['quantity'].dtype
 df_pinkmorsel['quantity'] = pd.to_numeric(df_pinkmorsel['quantity'], errors='coerce')
 
 # 'quantity' * 'price' = 'sales'
 df_pinkmorsel['sales'] = df_pinkmorsel['quantity'] * df_pinkmorsel['price']
-
-print(df_pinkmorsel.head())
-print(df_pinkmorsel.tail())
 
 sales_pre_increase = df_pinkmorsel[df_pinkmorsel['date'] < '2021-01-15']['sales'].sum()
 sales_post_increase = df_pinkmorsel[df_pinkmorsel['date'] >= '2021-01-15']['sales'].sum()
@@ -68,8 +49,12 @@ df_dash = df_pinkmorsel.drop(columns=['product', 'price', 'quantity'])
 # filter
 # df containing: [sales], [date], [region]
 df_output = df_dash[['sales', 'date', 'region']].copy()
-# print("df_output: ", df_output)
 # ###
+# output CSV file
+df_output.to_csv("pink_morsel_output.csv", index=False)
+
+# ###
+
 # df_feb = df_output[df_output['date'].dt.month == 2].copy()
 df_feb1 = df_output[(df_output['date'].dt.month == 2) & (df_output['date'].dt.day == 1)].copy()
 # ###
