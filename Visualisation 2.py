@@ -101,13 +101,18 @@ fig1.add_vline(
 )
 
 app = Dash(__name__)
+###
 
+###
 app.layout = html.Div([
     html.H1(
-        "Visualisation2 Sales before and after price increase",
+        "Sales before and after price increase",
         style={'textAlign': 'center'}
     ),
-
+    html.H2(
+        "Pink Morsels",
+        style={'textAlign': 'center'}
+    ),
     dcc.Graph(
         id='sales-graph',
         figure=fig1
