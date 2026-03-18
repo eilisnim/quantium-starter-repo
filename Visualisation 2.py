@@ -79,12 +79,7 @@ fig1 = px.line(
         "sales": ":,.0f"
     }
 )
-# does code Impact? ans No
-#fig1.update_layout(
-#  xaxis=dict(
-#    range=[df_grouped['date'].min(), df_grouped['date'].max()]
-#  )
-#)
+
 # put date in milliseconds - Price Increase Date
 dt_obj = datetime.strptime('15.01.2021 00:00:00,76',
                            '%d.%m.%Y %H:%M:%S,%f')
@@ -101,12 +96,10 @@ fig1.add_vline(
 )
 
 app = Dash(__name__)
-###
 
-###
 app.layout = html.Div([
     html.H1(
-        "Sales before and after price increase",
+        "Sweet Sales before and after price increase",
         style={'textAlign': 'center'}
     ),
     html.H2(
