@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from dash import Dash, html, dcc, Input, Output #callback
+from dash import Dash, html, dcc, Input, Output
 from datetime import datetime
 import plotly.express as px
 
@@ -9,7 +9,7 @@ df2 = pd.read_csv('data/daily_sales_data_1.csv')
 df3 = pd.read_csv('data/daily_sales_data_2.csv')
 # combine into 1 dataframe
 df_candy = pd.concat([df1, df2, df3], ignore_index=True)
-# PREPARE DATA
+
 # convert date to datetime
 df_candy['date'] = pd.to_datetime(df_candy['date'])
 # Filter for Pink Morsels only
@@ -57,7 +57,7 @@ df_grouped = (
 df_grouped = df_grouped.sort_values('date')
 # filter for graph date-range
 df_filtered = df_grouped[
-    (df_grouped["date"] >= "2020-12-15") &
+    (df_grouped["date"] >= "2021-01-01") &
     (df_grouped["date"] <= "2021-02-01")
 ]
 df_filtered['region'] = df_filtered['region'].str.title()
@@ -74,54 +74,72 @@ fig1 = px.line(
 
 app = Dash(__name__)
 
+#####
 app.layout = html.Div([
+
     # header
     html.H1(
-        "Pink Morsel Sales before and after price increase",
-        style={
-            "textAlign": "center",
-            "backgroundColor": "#fff0f5",
-            "padding": "50px",
-            "margin": "0",
-            "fontSize": "28px",
-            "fontWeight": "bold"
-    }),
+        "Pink Morsel Sales before and after price increase"
+    ),
+
+    # MAIN CONTAINER (CSS controls layout)
     html.Div([
+
         # left panel
         html.Div([
             dcc.Graph(
-            id='sales-graph',
-            figure=fig1
+                id='sales-graph',
+                figure=fig1
             )
         ], className="graph-panel"),
 
-        # right panel
-        html.Div([
-            html.H3(
-                "Select Sales Region",
-                className="radio-title"
-            ),
-            dcc.RadioItems(
-                id='radio-region',
-                options=[
-                    {'label': 'North', 'value': 'north'},
-                    {'label': 'South', 'value': 'south'},
-                    {'label': 'East', 'value': 'east'},
-                    {'label': 'West', 'value': 'west'},
-                    {'label': 'All Regions', 'value': 'all'},
-                ],
-                value='all',
-                labelClassName = "radio-label"
-            ),
-        html.Img(
-            src="/assets/pink_morsel.png",
-            className="controls-img"
-        )
-    ], className="controls-panel")
-], className="main-container")
-###
+        # right panel (radio buttons)
+        #####################################################
+html.Div([
+    dcc.RadioItems(
+        id='radio-region',
+        options=[
+            {'label': 'North', 'value': 'north'},
+            {'label': 'South', 'value': 'south'},
+            {'label': 'East', 'value': 'east'},
+            {'label': 'West', 'value': 'west'},
+            {'label': 'All Regions', 'value': 'all'},
+        ],
+        value='all',
+        labelClassName="radio-label"
+    ),
+
+    html.Img#
+        src="/assets/pink_morsel.png",
+        style={
+            "width": "100%",
+            "marginTop": "20px",
+            "borderRadius": "10px"
+        }
+    )
+
+], className="controls-panel")
+        #############################################
+#        html.Div([
+#            dcc.RadioItems(
+#                id='radio-region',
+#                options=[
+#                    {'label': 'North', 'value': 'north'},
+#                    {'label': 'South', 'value': 'south'},
+#                    {'label': 'East', 'value': 'east'},
+#                    {'label': 'West', 'value': 'west'},
+#                    {'label': 'All Regions', 'value': 'all'},
+#                ],
+#                value='all',
+#                labelClassName="radio-label"
+#            )
+#        ], className="controls-panel")
+
+    ], className="main-container")
+
 ])
-###
+#####
+
 @app.callback(
     Output('sales-graph', 'figure'),
     Input('radio-region', 'value')
@@ -143,17 +161,17 @@ def update_graph(selected_region):
         markers=True
     )
     fig1.update_layout(
-        plot_bgcolor='#EFC9E4',  # graph area
-        paper_bgcolor='#EFC9E4',  # border area
+        plot_bgcolor='lightpink',  # graph area
+        paper_bgcolor='lightpink',  # border area
         height = 400,
         showlegend=False
     )
     # Hover style
     fig1.update_traces(
         hoverlabel=dict(
-        bgcolor='#EDAFCA',
+        bgcolor='#ffe6f0',
         font_color='black',
-        bordercolor = '#F52071' # border
+        bordercolor = '#ffb6c1'
     ),
     hovertemplate = (
         "<b>%{x|%d %b %Y}</b><br><br>"
