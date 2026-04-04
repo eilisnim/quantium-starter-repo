@@ -75,6 +75,7 @@ fig1 = px.line(
 app = Dash(__name__)
 
 app.layout = html.Div([
+    # header
     html.H1(
         "Pink Morsel Sales before and after price increase",
         style={
@@ -89,14 +90,11 @@ app.layout = html.Div([
         # left panel
         html.Div([
             dcc.Graph(
-                id='sales-graph',
-                figure=fig1
+            id='sales-graph',
+            figure=fig1
             )
-        ],
-        style={
-            'flex': '2',
-            'padding': '10px',
-        }),
+        ], className="graph-panel"),
+
         # right panel
         html.Div([
             html.H3(
@@ -121,7 +119,9 @@ app.layout = html.Div([
         )
     ], className="controls-panel")
 ], className="main-container")
+###
 ])
+###
 @app.callback(
     Output('sales-graph', 'figure'),
     Input('radio-region', 'value')
